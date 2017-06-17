@@ -75,9 +75,12 @@
     <!-- List of package names that com.android.launcher3.action.LAUNCH
      should be targeting. Can be empty. -->
     <array name="launch_broadcast_targets" translatable="false"></array>
-
-    <!-- Name of an icon provider class. -->
+	
+	<!-- Name of an icon provider class. -->
     <string name="icon_provider_class" translatable="false">com.android.launcher3.SuperDynamicIconProvider</string>
+
+    <!-- Name of an icon. -->
+    <string name="iconPackPackageDefault" translatable="false">""</string>
 
     <!-- Package name of the default wallpaper picker. -->
     <string name="wallpaper_picker_package" translatable="false">com.google.android.apps.wallpaper</string>
