@@ -26,8 +26,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.android.launcher3.LauncherAppState;
 import com.android.launcher3.R;
-
 
 public class IconPackPreference extends Preference {
 
@@ -87,14 +87,17 @@ public class IconPackPreference extends Preference {
         builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int position) {
+				LauncherAppState app = LauncherAppState.getInstance();
                 String item = adapter.getItem(position);
                 persistString(item);
                 if (!item.isEmpty()) {
                     IconPackInfo packInfo = packages.get(item);
                     setIcon(packInfo.icon);
                     setSummary(packInfo.label);
+					app.reloadAllApps();
                 } else {
                     setNone();
+					app.reloadAllApps();
                 }
             }
         });
