@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Copyright (C) 2015 Google Inc.
+     Copyright (C) 2017 CypherOS
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -26,7 +27,13 @@
             android:key="pref_allowRotation"
             android:title="@string/allow_rotation_title"
             android:defaultValue="@bool/allow_rotation"
-            android:persistent="true"
-    />
+            android:persistent="true" />
+	`
+	<SwitchPreference
+            android:key="pref_showPredictiveApps"
+            android:title="@string/predictive_apps_title"
+			android:summary="@string/predictive_apps_title_summary"
+            android:defaultValue="true"
+            android:persistent="true" />
 
 </PreferenceScreen>

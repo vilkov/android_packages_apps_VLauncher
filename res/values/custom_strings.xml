@@ -21,4 +21,7 @@
     <!-- Icon Pack -->
     <string name="icon_pack">Icon Pack</string>
     <string name="icon_pack_summary">Select an icon Pack</string>
+    <!-- Predictive apps -->
+    <string name="predictive_apps_title">Predictive apps</string>
+    <string name="predictive_apps_title_summary">Display the recently used applications inside the app drawer</string>
 </resources>
