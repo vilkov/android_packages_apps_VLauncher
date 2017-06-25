@@ -2726,7 +2726,7 @@ public class LauncherModel extends BroadcastReceiver
             runOnMainThread(r);
         }
 
-        public void loadAllApps() {
+        private void loadAllApps() {
             final long loadTime = DEBUG_LOADERS ? SystemClock.uptimeMillis() : 0;
 
             final Callbacks oldCallbacks = mCallbacks.get();

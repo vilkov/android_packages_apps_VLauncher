@@ -121,8 +121,8 @@ public class IconCache {
         mIconDb = new IconDB(context, inv.iconBitmapSize);
         mLowResCanvas = new Canvas();
         mLowResPaint = new Paint(Paint.FILTER_BITMAP_FLAG | Paint.ANTI_ALIAS_FLAG);
-		
-		mIconProvider = IconProvider.loadByName(context.getString(R.string.icon_provider_class),
+
+        mIconProvider = IconProvider.loadByName(context.getString(R.string.icon_provider_class),
                 context);
 
         mWorkerHandler = new Handler(LauncherModel.getWorkerLooper());
@@ -168,7 +168,7 @@ public class IconCache {
     }
 
     public Drawable getFullResIcon(ActivityInfo info) {
-       Resources resources;
+        Resources resources;
         try {
             resources = mPackageManager.getResourcesForApplication(
                     info.applicationInfo);
@@ -181,6 +181,7 @@ public class IconCache {
                 return getFullResIcon(resources, iconId);
             }
         }
+
         return getFullResDefaultActivityIcon();
     }
 
@@ -387,7 +388,7 @@ public class IconCache {
         if (entry == null) {
             entry = new CacheEntry();
             entry.icon = Utilities.createBadgedIconBitmap(
-                    app.getIcon(mIconDpi), app.getUser(),
+                    mIconProvider.getIcon(app, mIconDpi), app.getUser(),
                     mContext);
         }
         entry.title = app.getLabel();
@@ -446,9 +447,7 @@ public class IconCache {
                 false, useLowResIcon);
         application.title = Utilities.trim(entry.title);
         application.contentDescription = entry.contentDescription;
-        IconPack iconPack = IconPackProvider.loadAndGetIconPack(mContext);
-        Drawable icon = iconPack == null ? null : iconPack.getIcon(application.componentName);
-        application.iconBitmap = icon == null ? getNonNullIcon(entry, user) : Utilities.createIconBitmap(icon, mContext);
+        application.iconBitmap = getNonNullIcon(entry, user);
         application.usingLowResIcon = entry.isLowResIcon;
     }
 
@@ -461,9 +460,7 @@ public class IconCache {
         if (entry.icon != null && !isDefaultIcon(entry.icon, application.user)) {
             application.title = Utilities.trim(entry.title);
             application.contentDescription = entry.contentDescription;
-            IconPack iconPack = IconPackProvider.loadAndGetIconPack(mContext);
-            Drawable icon = iconPack == null ? null : iconPack.getIcon(application.componentName);
-            application.iconBitmap = icon == null ? entry.icon : Utilities.createIconBitmap(icon, mContext);
+            application.iconBitmap = entry.icon;
             application.usingLowResIcon = entry.isLowResIcon;
         }
     }
@@ -512,10 +509,7 @@ public class IconCache {
             ShortcutInfo shortcutInfo, ComponentName component, LauncherActivityInfoCompat info,
             UserHandleCompat user, boolean usePkgIcon, boolean useLowResIcon) {
         CacheEntry entry = cacheLocked(component, info, user, usePkgIcon, useLowResIcon);
-        IconPack iconPack = IconPackProvider.loadAndGetIconPack(mContext);
-        Drawable icon = iconPack == null ? null : iconPack.getIcon(component);
-        Bitmap iBitmap = icon == null ? getNonNullIcon(entry, user) : Utilities.createIconBitmap(icon, mContext);
-        shortcutInfo.setIcon(iBitmap);
+        shortcutInfo.setIcon(getNonNullIcon(entry, user));
         shortcutInfo.title = Utilities.trim(entry.title);
         shortcutInfo.contentDescription = entry.contentDescription;
         shortcutInfo.usingFallbackIcon = isDefaultIcon(entry.icon, user);
@@ -562,7 +556,7 @@ public class IconCache {
             if (!getEntryFromDB(cacheKey, entry, useLowResIcon) || DEBUG_IGNORE_CACHE) {
                 if (info != null) {
                     entry.icon = Utilities.createBadgedIconBitmap(
-                            info.getIcon(mIconDpi), info.getUser(),
+                            mIconProvider.getIcon(info, mIconDpi), info.getUser(),
                             mContext);
                 } else {
                     if (usePackageIcon) {
