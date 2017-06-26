@@ -51,6 +51,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -66,6 +67,7 @@ import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.method.TextKeyListener;
 import android.util.Log;
+import android.util.Pair;
 import android.view.Display;
 import android.view.HapticFeedbackConstants;
 import android.view.KeyEvent;
@@ -81,8 +83,12 @@ import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityManager;
 import android.view.animation.OvershootInterpolator;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.Advanceable;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListPopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -364,6 +370,13 @@ public class Launcher extends Activity
  
     private Context mContext;
 
+    // icon pack
+    private AlertDialog mIconPackDialog;
+    private EditText mEditText;
+    private ImageView mPackageIcon;
+    private IconsHandler mIconsHandler;
+    private View mIconPackView;
+
     @Thunk void setOrientation() {
         if (mRotationEnabled) {
             unlockScreenOrientation(true);
@@ -446,6 +459,8 @@ public class Launcher extends Activity
                 .addAccessibilityStateChangeListener(this);
 
         lockAllApps();
+
+        mIconsHandler = IconCache.getIconsHandler(this);
 
         mSavedState = savedInstanceState;
         restoreState(mSavedState);
@@ -1895,6 +1910,10 @@ public class Launcher extends Activity
             }
 
             mLauncherTab.getClient().hideOverlay(true);
+
+            if (mIconPackDialog != null) {
+                mIconPackDialog.dismiss();
+            }
 
             if (mLauncherCallbacks != null) {
                 mLauncherCallbacks.onHomeIntent();
@@ -4412,6 +4431,80 @@ public class Launcher extends Activity
             }
         }
         return createAppDragInfo(appLaunchIntent, user);
+    }
+
+    protected void startEdit(final Bitmap bm, final ItemInfo info, final ComponentName component) {
+        LauncherActivityInfoCompat app = LauncherAppsCompat.getInstance(this)
+                .resolveActivity(info.getIntent(), info.user);
+        mIconPackView = getLayoutInflater().inflate(R.layout.edit_dialog, null);
+        mPackageIcon = (ImageView) mIconPackView.findViewById(R.id.package_icon);
+        mEditText = (EditText) mIconPackView.findViewById(R.id.editText);
+        mEditText.setText(mIconCache.getCacheEntry(app).title);
+        mEditText.setSelection(mEditText.getText().length());
+
+        Bitmap defaultIcon = mIconsHandler.getDrawableIconForPackage(component);
+        Drawable icon = new BitmapDrawable(getResources(), bm);
+        Drawable defaultDrawable = new BitmapDrawable(getResources(),
+                defaultIcon != null ? defaultIcon : mIconCache.getCacheEntry(app).icon);
+        mPackageIcon.setImageDrawable(icon);
+
+        final int popupWidth = getResources().getDimensionPixelSize(R.dimen.edit_dialog_min_width);
+        Pair<List<String>, List<String>> iconPacks = mIconsHandler.getAllIconPacks();
+        ListPopupWindow listPopupWindow = new ListPopupWindow(this);
+        listPopupWindow.setAdapter(new ArrayAdapter(this,
+                R.layout.edit_dialog_item, iconPacks.second));
+        listPopupWindow.setWidth(popupWidth);
+        listPopupWindow.setAnchorView(mPackageIcon);
+        listPopupWindow.setModal(true);
+        listPopupWindow.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+                ChooseIconActivity.setItemInfo(info);
+                Intent intent = new Intent(Launcher.this, ChooseIconActivity.class);
+                intent.putExtra("app_package", component.getPackageName());
+                intent.putExtra("app_label", mEditText.getText().toString());
+                intent.putExtra("icon_pack_package", iconPacks.first.get(position));
+                Launcher.this.startActivity(intent);
+                mIconPackDialog.dismiss();
+            }
+        });
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                .setView(mIconPackView)
+                .setTitle(getString(R.string.edit_app))
+                .setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        // reload workspace
+                        LauncherAppState.getInstance().getModel().forceReload();
+                    }
+                })
+                .setNegativeButton(R.string.reset,
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            mIconCache.addCustomInfoToDataBase(defaultDrawable, info, null);
+                            mIconPackDialog.dismiss();
+                        }
+                })
+                .setPositiveButton(R.string.save,
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            mIconCache.addCustomInfoToDataBase(icon, info, mEditText.getText());
+                            mIconPackDialog.dismiss();
+                        }
+                });
+        mIconPackDialog = builder.create();
+        mPackageIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!iconPacks.second.isEmpty()) {
+                    listPopupWindow.show();
+                }
+            }
+        });
+        mIconPackDialog.show();
     }
 
     // TODO: This method should be a part of LauncherSearchCallback

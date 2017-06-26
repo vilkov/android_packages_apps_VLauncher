@@ -196,4 +196,9 @@
     <dimen name="qsb_shadow_blur_radius">1.0dip</dimen>
     <dimen name="qsb_key_shadow_offset">1.0dip</dimen>
 
+    <!-- Icon packs -->
+    <dimen name="app_icon_size">58dp</dimen>
+    <dimen name="icon_pack_icon_size">48dp</dimen>
+    <dimen name="icon_margin">5dp</dimen>
+    <dimen name="edit_dialog_min_width">200dp</dimen>
 </resources>

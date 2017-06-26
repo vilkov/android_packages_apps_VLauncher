@@ -2,6 +2,8 @@ package com.android.launcher3;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import com.android.launcher3.compat.LauncherActivityInfoCompat;
 import com.android.launcher3.compat.UserHandleCompat;
@@ -24,13 +26,19 @@ public class SuperDynamicIconProvider extends IconProvider
     private BroadcastReceiver mBroadcastReceiver;
     protected PackageManager mPackageManager;
 
+    private Context mContext;
+    private IconsHandler mIconsHandler;
+
     public SuperDynamicIconProvider(Context context) {
+        super();
+        mContext = context;
         mBroadcastReceiver = new DynamicIconProviderReceiver(this);
         IntentFilter intentFilter = new IntentFilter("android.intent.action.DATE_CHANGED");
         intentFilter.addAction("android.intent.action.TIME_SET");
         intentFilter.addAction("android.intent.action.TIMEZONE_CHANGED");
         context.registerReceiver(mBroadcastReceiver, intentFilter, null, new Handler(LauncherModel.getWorkerLooper()));
         mPackageManager = context.getPackageManager();
+        mIconsHandler = IconCache.getIconsHandler(context);
     }
 
     private int dayOfMonth() {
@@ -63,6 +71,10 @@ public class SuperDynamicIconProvider extends IconProvider
     public Drawable getIcon(final LauncherActivityInfoCompat launcherActivityInfoCompat, int iconDpi) {
         Drawable drawable = null;
         String packageName = launcherActivityInfoCompat.getApplicationInfo().packageName;
+        Bitmap bm = mIconsHandler.getDrawableIconForPackage(launcherActivityInfoCompat.getComponentName());
+        if (bm == null) {
+            return launcherActivityInfoCompat.getIcon(iconDpi);
+        }
 
         if (isCalendar(packageName)) {
             try {
@@ -80,8 +92,7 @@ public class SuperDynamicIconProvider extends IconProvider
         if (drawable == null) {
             drawable = super.getIcon(launcherActivityInfoCompat, iconDpi);
         }
-
-        return drawable;
+        return new BitmapDrawable(mContext.getResources(), Utilities.createIconBitmap(bm, mContext));
     }
 
     public String getIconSystemState(String s) {
