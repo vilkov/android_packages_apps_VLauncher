@@ -26,8 +26,8 @@ LOCAL_SRC_FILES := $(call all-java-files-under, src)
 
 LOCAL_SDK_VERSION := current
 
-LOCAL_PACKAGE_NAME := Launcher3Tests
+LOCAL_PACKAGE_NAME := VLauncherTests
 
-LOCAL_INSTRUMENTATION_FOR := Launcher3
+LOCAL_INSTRUMENTATION_FOR := VLauncher
 
 include $(BUILD_PACKAGE)
