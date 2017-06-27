@@ -2880,7 +2880,7 @@ public class Launcher extends Activity
                 startActivity(intent, optsBundle);
 
                 if (isAllAppsVisible() && mShowPredictiveApps) {
-                    predictedAppsController.updateComponentCount(intent.getComponent());
+                    mPredictedAppsController.updateComponentCount(intent.getComponent());
                 }
             } else {
                 LauncherAppsCompat.getInstance(this).startActivityForProfile(
@@ -3485,8 +3485,6 @@ public class Launcher extends Activity
             }
 		}
     }
-
-    private PredictedAppsController predictedAppsController;
 
     void lockAllApps() {
         // TODO
