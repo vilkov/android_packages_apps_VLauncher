@@ -53,4 +53,15 @@
     <color name="primary_color">#000000</color>
     <color name="primary_dark_color">#000000</color>
     <color name="accent">#ff4285f4</color>
+
+    <!-- Icon Packs -->
+    <color name="icon_chooser_background">#000000</color>
+    <color name="icon_chooser_background_alpha">#000000</color>
+    <color name="icon_chooser_text">#ffffff</color>
+    <color name="icon_chooser_text_alpha">@color/accent</color>
+    <color name="icon_chooser_dialog_text">#ffffff</color>
+    <color name="edit_dialog_input_text_color">#ffffff</color>
+    <color name="list_popup_window_background">#000000</color>
+    <color name="list_popup_window_text">#ffffff</color>
+
 </resources>

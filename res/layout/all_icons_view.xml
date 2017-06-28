@@ -24,9 +24,7 @@
         android:id="@+id/icon_chooser"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:paddingLeft="25dp"
-        android:paddingRight="25dp"
-        android:paddingTop="25dp"
+        android:padding="25dp"
         android:text="@string/icon_chooser_title"
         android:textColor="@android:color/white"
         android:textSize="24sp" />

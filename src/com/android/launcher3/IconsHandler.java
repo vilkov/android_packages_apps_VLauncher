@@ -49,6 +49,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
+import android.app.UiModeManager;
 
 import org.xmlpull.v1.XmlPullParser;
 
@@ -458,7 +459,8 @@ public class IconsHandler {
     public void showDialog(Activity activity) {
         loadAvailableIconPacks();
         final IconAdapter adapter = new IconAdapter(mContext, mIconPacks);
-        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        UiModeManager uiManager = (UiModeManager) activity.getSystemService(Context.UI_MODE_SERVICE);
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity, uiManager.getNightMode() == 2 ? android.R.style.Theme_DeviceDefault_Dialog_Alert : android.R.style.Theme_DeviceDefault_Light_Dialog_Alert);
         builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int position) {

@@ -61,6 +61,10 @@
     <color name="icon_chooser_background_alpha">#ff3a3a3a</color>
     <color name="icon_chooser_text">#ffafafaf</color>
     <color name="icon_chooser_text_alpha">@color/accent</color>
+    <color name="icon_chooser_dialog_text">@*android:color/material_grey_850</color>
+    <color name="edit_dialog_input_text_color">@*android:color/material_grey_850</color>
+    <color name="list_popup_window_background">#FFF2F2F2</color>
+    <color name="list_popup_window_text">@*android:color/material_grey_850</color>
 
     <!-- Pixel -->
     <color name="qsb_connector">#fff2f2f2</color>

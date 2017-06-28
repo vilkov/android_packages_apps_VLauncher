@@ -91,6 +91,7 @@ import android.widget.ImageView;
 import android.widget.ListPopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.app.UiModeManager;
 
 import com.android.launcher3.DropTarget.DragObject;
 import com.android.launcher3.LauncherSettings.Favorites;
@@ -377,6 +378,8 @@ public class Launcher extends Activity
     private IconsHandler mIconsHandler;
     private View mIconPackView;
 
+    private UiModeManager uiManager;
+
     @Thunk void setOrientation() {
         if (mRotationEnabled) {
             unlockScreenOrientation(true);
@@ -419,6 +422,8 @@ public class Launcher extends Activity
         }
 
         super.onCreate(savedInstanceState);
+
+        uiManager = (UiModeManager) getSystemService(Context.UI_MODE_SERVICE);
 
         LauncherAppState app = LauncherAppState.getInstance();
 
@@ -2567,7 +2572,7 @@ public class Launcher extends Activity
 
     private void showBrokenAppInstallDialog(final String packageName,
             DialogInterface.OnClickListener onSearchClickListener) {
-        new AlertDialog.Builder(this)
+        new AlertDialog.Builder(this, uiManager.getNightMode() == 2 ? android.R.style.Theme_DeviceDefault_Dialog_Alert : android.R.style.Theme_DeviceDefault_Light_Dialog_Alert)
             .setTitle(R.string.abandoned_promises_title)
             .setMessage(R.string.abandoned_promise_explanation)
             .setPositiveButton(R.string.abandoned_search, onSearchClickListener)
@@ -4451,6 +4456,7 @@ public class Launcher extends Activity
         final int popupWidth = getResources().getDimensionPixelSize(R.dimen.edit_dialog_min_width);
         Pair<List<String>, List<String>> iconPacks = mIconsHandler.getAllIconPacks();
         ListPopupWindow listPopupWindow = new ListPopupWindow(this);
+        listPopupWindow.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_list_popup_window));
         listPopupWindow.setAdapter(new ArrayAdapter(this,
                 R.layout.edit_dialog_item, iconPacks.second));
         listPopupWindow.setWidth(popupWidth);
@@ -4469,7 +4475,7 @@ public class Launcher extends Activity
             }
         });
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this)
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, uiManager.getNightMode() == 2 ? android.R.style.Theme_DeviceDefault_Dialog_Alert : android.R.style.Theme_DeviceDefault_Light_Dialog_Alert)
                 .setView(mIconPackView)
                 .setTitle(getString(R.string.edit_app))
                 .setOnDismissListener(new DialogInterface.OnDismissListener() {

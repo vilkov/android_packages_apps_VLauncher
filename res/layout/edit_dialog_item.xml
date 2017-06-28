@@ -22,7 +22,7 @@
     android:gravity="center_vertical"
     android:paddingStart="16dip"
     android:paddingEnd="16dip"
-    android:textColor="?android:attr/textColorAlertDialogListItem"
+    android:textColor="@color/list_popup_window_text"
     android:textAppearance="?android:attr/textAppearanceListItemSmall"
     android:ellipsize="marquee"
     android:layout_alignParentLeft="true" />

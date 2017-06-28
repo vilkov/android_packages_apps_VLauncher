@@ -33,7 +33,7 @@
         android:paddingEnd="8dip"
         android:paddingStart="8dip"
         android:textSize="19sp"
-        android:textColor="@*android:color/material_grey_850" />
+        android:textColor="@color/icon_chooser_dialog_text" />
     <RadioButton
         android:id="@+id/radio"
         android:layout_width="wrap_content"
