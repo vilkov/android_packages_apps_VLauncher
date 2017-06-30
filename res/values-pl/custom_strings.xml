@@ -19,6 +19,16 @@
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <!-- Icon Pack: Preference -->
+  <string name="icon_pack_title">Pakiet ikon</string>
+  <string name="icon_pack_default">Domyślnie</string>
   <!-- Icon Pack: Edit Dialog -->
+  <string name="edit_drop_target_label">Edytuj</string>
+  <string name="edit_app">Edytuj</string>
+  <string name="reset">Resetuj</string>
+  <string name="save">Zapisz</string>
   <!-- Icon Pack: Icon Chooser -->
+  <string name="icon_chooser_title">Wybierz ikonę</string>
+  <string name="icon_chooser_similar">Podobne</string>
+  <string name="icon_chooser_all">Wszystko</string>
+  <string name="loading">Ładuję, proszę czekać</string>
 </resources>
